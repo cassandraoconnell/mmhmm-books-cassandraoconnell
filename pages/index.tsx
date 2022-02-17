@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import BookInfo, { Book } from "../components/BookInfo";
-import styles from "../styles/Home.module.css";
+import Button from "../components/Button";
 
 const ENDPOINT = "https://us-central1-all-turtles-interview.cloudfunctions.net";
 const AUTH_HEADER = { Authorization: "cassandraoconnell" };
@@ -57,7 +57,7 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="container">
       <Head>
         <title>mmhmm Bookshelf</title>
         <meta name="description" content="Look at all these books!" />
@@ -67,16 +67,20 @@ const Home: NextPage = () => {
       <header>
         <h1>Bookshelf</h1>
         <Link href="/add-book" passHref>
-          <button>Add Book</button>
+          <Button>Add Book</Button>
         </Link>
       </header>
 
       <main>
-        {isLoading
-          ? "Loading..."
-          : bookList?.map((book) => (
-              <BookInfo book={book} key={book.id} onBookDelete={onBookDelete} />
-            ))}
+        {isLoading ? (
+          <i>Loading...</i>
+        ) : bookList && bookList.length > 0 ? (
+          bookList.map((book) => (
+            <BookInfo book={book} key={book.id} onBookDelete={onBookDelete} />
+          ))
+        ) : (
+          <i>Bookshelf is empty. Try adding some books!</i>
+        )}
       </main>
     </div>
   );

@@ -1,4 +1,6 @@
 import { useCallback, useState } from "react";
+import IconButton from "./IconButton";
+import styles from "../styles/BookInfo.module.css";
 
 interface Book {
   id: string;
@@ -22,14 +24,24 @@ const BookInfo = ({ book, onBookDelete }: BookInfoProps) => {
   }, [book, onBookDelete]);
 
   return (
-    <div>
-      <img src={book.imageUrl} alt={`Cover image for ${book.title}`} />
-      <h1>{book.title}</h1>
-      <h2>{book.author}</h2>
-      <p>{book.description}</p>
-      <button disabled={isDeleting} onClick={onBookDeleteClick}>
-        Delete
-      </button>
+    <div className={styles.container}>
+      <img alt="Cover image" className={styles.image} src={book.imageUrl} />
+      <div className={styles.text}>
+        <h1>{book.title || <i>Missing title</i>}</h1>
+        <h2>{book.author || <i>Missing author</i>}</h2>
+        <p>{book.description || <i>Missing description</i>}</p>
+      </div>
+      <div className={styles.delete}>
+        {isDeleting ? (
+          <i>Deleting...</i>
+        ) : (
+          <IconButton
+            glyph="delete_outline"
+            onClick={onBookDeleteClick}
+            title="Delete Book"
+          />
+        )}
+      </div>
     </div>
   );
 };

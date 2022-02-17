@@ -2,7 +2,10 @@ import { useCallback, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import styles from "../styles/Home.module.css";
+import { useRouter } from "next/router";
+import Button from "../components/Button";
+import IconButton from "../components/IconButton";
+import TextInput from "../components/TextInput";
 
 const AddBook: NextPage = () => {
   const [title, setTitle] = useState("");
@@ -12,6 +15,7 @@ const AddBook: NextPage = () => {
 
   const [isAdding, setIsAdding] = useState(false);
 
+  const router = useRouter();
   const onFormSubmit = useCallback(
     async (event) => {
       const request = new Request(
@@ -35,12 +39,13 @@ const AddBook: NextPage = () => {
       setIsAdding(true);
       await fetch(request);
       setIsAdding(false);
+      router.push("/");
     },
-    [author, description, imageUrl, title]
+    [author, description, imageUrl, router, title]
   );
 
   return (
-    <div className={styles.container}>
+    <div className="container">
       <Head>
         <title>mmhmm Bookshelf - Add Book</title>
         <meta name="description" content="Wow! I can add more books?" />
@@ -50,50 +55,44 @@ const AddBook: NextPage = () => {
       <header>
         <h1>Add a new book</h1>
         <Link href="/" passHref>
-          <button>Close</button>
+          <IconButton glyph="close" title="Close" />
         </Link>
       </header>
 
       <main>
         <form onSubmit={onFormSubmit}>
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            id="title"
+          <TextInput
+            label="Title"
             name="title"
             onChange={(event) => setTitle(event.target.value)}
             value={title}
           />
 
-          <label htmlFor="author">Author</label>
-          <input
-            type="text"
-            id="author"
+          <TextInput
+            label="Author"
             name="author"
             onChange={(event) => setAuthor(event.target.value)}
             value={author}
           />
 
-          <label htmlFor="description">Description</label>
-          <textarea
-            id="description"
+          <TextInput
+            isMultiLine
+            label="Description"
             name="description"
             onChange={(event) => setDescription(event.target.value)}
             value={description}
           />
 
-          <label htmlFor="imageUrl">Image URL</label>
-          <input
-            type="text"
-            id="imageUrl"
+          <TextInput
+            label="Image URL"
             name="imageUrl"
             onChange={(event) => setImageUrl(event.target.value)}
             value={imageUrl}
           />
 
-          <button disabled={isAdding} type="submit">
+          <Button isDisabled={isAdding} type="submit">
             Save
-          </button>
+          </Button>
         </form>
       </main>
     </div>
