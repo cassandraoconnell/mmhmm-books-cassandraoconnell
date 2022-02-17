@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import Button from "../components/Button";
 import IconButton from "../components/IconButton";
 import TextInput from "../components/TextInput";
+import { useBooks } from "../store/Books";
 
 const AddBook: NextPage = () => {
   const [title, setTitle] = useState("");
@@ -15,33 +16,21 @@ const AddBook: NextPage = () => {
 
   const [isAdding, setIsAdding] = useState(false);
 
+  const books = useBooks();
   const router = useRouter();
   const onFormSubmit = useCallback(
     async (event) => {
-      const request = new Request(
-        "https://us-central1-all-turtles-interview.cloudfunctions.net/books",
-        {
-          method: "POST",
-          headers: {
-            Authorization: "cassandraoconnell",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title,
-            author,
-            description,
-            imageUrl,
-          }),
-        }
-      );
-
       event.preventDefault();
       setIsAdding(true);
-      await fetch(request);
-      setIsAdding(false);
+      await books.add({
+        title,
+        author,
+        description,
+        imageUrl,
+      });
       router.push("/");
     },
-    [author, description, imageUrl, router, title]
+    [author, books, description, imageUrl, router, title]
   );
 
   return (

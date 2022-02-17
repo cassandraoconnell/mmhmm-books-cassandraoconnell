@@ -1,27 +1,21 @@
 import { useCallback, useState } from "react";
 import IconButton from "./IconButton";
 import styles from "../styles/BookInfo.module.css";
-
-interface Book {
-  id: string;
-  description: string;
-  imageUrl: string;
-  author: string;
-  title: string;
-}
+import { Book, useBooks } from "../store/Books";
 
 interface BookInfoProps {
   book: Book;
-  onBookDelete: (book: Book) => void;
 }
 
-const BookInfo = ({ book, onBookDelete }: BookInfoProps) => {
+const BookInfo = ({ book }: BookInfoProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const books = useBooks();
 
   const onBookDeleteClick = useCallback(() => {
     setIsDeleting(true);
-    onBookDelete(book);
-  }, [book, onBookDelete]);
+    books.remove(book.id);
+  }, [book.id, books]);
 
   return (
     <div className={styles.container}>
@@ -46,5 +40,4 @@ const BookInfo = ({ book, onBookDelete }: BookInfoProps) => {
   );
 };
 
-export type { Book };
 export default BookInfo;
